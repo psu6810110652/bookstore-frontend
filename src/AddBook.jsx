@@ -4,7 +4,7 @@ export default function AddBook(props) {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
-    // ส่งค่ากลับไปให้ BookScreen
+    
     props.onBookAdded(values);
     form.resetFields();
   };
@@ -23,7 +23,7 @@ export default function AddBook(props) {
         <InputNumber min={0} placeholder="Price" />
       </Form.Item>
 
-      {/* Dropdown เลือก Category รับค่าจาก props */}
+      {}
       <Form.Item name="categoryId" label="Category" rules={[{ required: true }]}>
         <Select 
             style={{ width: 120 }} 

@@ -7,7 +7,6 @@ export default function BookList(props) {
       dataIndex: 'coverUrl',
       key: 'cover',
       render: (text) => (
-        // Port 3080 สำหรับรูปภาพตาม Slide 12
         <Image src={`http://localhost:3080${text}`} height={80} />
       ),
     },
@@ -47,7 +46,7 @@ export default function BookList(props) {
             Like
           </Button>
           
-          {/* ปุ่ม Edit (Assignment) */}
+          {}
           <Button onClick={() => props.onEdit(record)}>
             Edit
           </Button>
