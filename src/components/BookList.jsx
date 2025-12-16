@@ -1,15 +1,9 @@
-import { Space, Table, Button, Image, Tag, Popconfirm } from 'antd';
+import { Table, Button, Space, Popconfirm, Tag, Image } from 'antd';
+
 
 export default function BookList(props) {
+
   const columns = [
-    {
-      title: 'Cover',
-      dataIndex: 'coverUrl',
-      key: 'cover',
-      render: (text) => (
-        <Image src={`http://localhost:3080${text}`} height={80} />
-      ),
-    },
     {
       title: 'Title',
       dataIndex: 'title',
@@ -21,51 +15,69 @@ export default function BookList(props) {
       key: 'author',
     },
     {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      render: (text) => `$${text}`
     },
     {
-        title: 'Category',
-        dataIndex: 'category',
-        key: 'category',
-        render: (cat) => <Tag color="blue">{cat?.name || 'No Category'}</Tag>
+      title: 'ISBN',
+      dataIndex: 'isbn',
+      key: 'isbn',
     },
     {
-        title: 'Liked',
-        dataIndex: 'likeCount',
-        key: 'likeCount',
+      title: 'Stock',
+      dataIndex: 'stock',
+      key: 'stock',
+    },
+    {
+      title: "Cover",
+      dataIndex: 'coverUrl',
+      render: (text) => (
+        <Image src={`http://localhost:3080/${text}`} height={100} />
+      ),
+    },
+    {
+      title: 'Category',
+      dataIndex: 'category',
+      key: 'category',
+      render: (value) => (
+        <Tag color="blue">{value.name}</Tag>
+      ),
+    },
+    {
+      title: 'Liked',
+      dataIndex: 'likeCount',
+      key: 'likeCount',
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => props.onLiked(record)}>
-            Like
-          </Button>
-          
-          {}
-          <Button onClick={() => props.onEdit(record)}>
-            Edit
-          </Button>
+      render: (text, record) => (
+      <Space>
+        <Button type="primary" onClick={() => props.onLiked(record)}>Like</Button>
+        <Button type="secondary" onClick={() => props.onEdit(record)}>Edit</Button>
+        <Popconfirm title="Are you sure you want to delete this book?" onConfirm={() => props.onDeleted(record.id)}>
+          <Button danger type="dashed">Delete</Button>
+        </Popconfirm>
+      </Space>
+    ),
+    }
+  ]
 
-          <Popconfirm
-            title="Delete the book"
-            description="Are you sure to delete this book?"
-            onConfirm={() => props.onDeleted(record.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="primary" danger>
-                Delete
-            </Button>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
-
-  return <Table columns={columns} dataSource={props.data} rowKey="id" loading={props.loading} />;
+  return (
+    <Table 
+      rowKey="id" 
+      dataSource={props.data} 
+      columns={columns} 
+      rowClassName={(record, index) => {
+        if(record.stock < 30) {
+          return "red-row";
+        }
+      }}/>
+  )
 }
