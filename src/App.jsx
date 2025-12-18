@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Layout, Menu, Button } from 'antd';
-import LoginScreen from './LoginScreen'; // ไฟล์ที่คุณมีอยู่แล้ว (หรือสร้างใหม่ด้านล่าง)
+import LoginScreen from './LoginScreen'; 
 import BookScreen from './BookScreen';
 import Dashboard from './components/Dashboard';
 
@@ -11,7 +11,7 @@ const { Header, Content } = Layout;
 axios.defaults.baseURL = "http://localhost:3000"
 
 function App() {
-  // • เพิ่ม Feature Remember Me โดยเช็ค Token จาก localStorage เมื่อโหลดหน้า
+  
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('user_token'));
   const [books, setBooks] = useState([]);
 
@@ -29,7 +29,7 @@ function App() {
     setIsAuthenticated(false);
   };
 
-  // ดึงข้อมูลหนังสือไว้สำหรับทำ Dashboard
+  
   useEffect(() => {
     const savedToken = localStorage.getItem('user_token');
     if (savedToken) {
@@ -40,11 +40,11 @@ function App() {
     if (isAuthenticated) {
       axios.get("/api/book")
         .then(res => {
-          setBooks(res.data); // นำข้อมูลหนังสือที่ดึงได้ใส่ใน State
+          setBooks(res.data); 
         })
         .catch(err => {
           console.error("Dashboard fetch error:", err);
-          if (err.response?.status === 401) handleLogout(); // ถ้า Token หมดอายุให้ Logout
+          if (err.response?.status === 401) handleLogout(); 
         });
     }
   }, [isAuthenticated]);
