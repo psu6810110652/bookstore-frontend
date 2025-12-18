@@ -16,6 +16,7 @@ function App() {
   const [books, setBooks] = useState([]);
 
   const handleLoginSuccess = (token, remember) => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     if (remember) {
       localStorage.setItem('user_token', token);
     }
@@ -24,15 +25,17 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('user_token');
+    delete axios.defaults.headers.common['Authorization'];
     setIsAuthenticated(false);
   };
 
   // ดึงข้อมูลหนังสือไว้สำหรับทำ Dashboard
   useEffect(() => {
-    if (isAuthenticated) {
-      axios.get("/api/book").then(res => setBooks(res.data));
+    const savedToken = localStorage.getItem('user_token');
+    if (savedToken) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
     }
-  }, [isAuthenticated]);
+  }, []);
 
   return (
     <Router>
