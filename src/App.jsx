@@ -1,21 +1,65 @@
 import './App.css'
 import axios from 'axios'
-import { useState } from 'react';
-import LoginScreen from './LoginScreen';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
+import { Layout, Menu, Button } from 'antd';
+import LoginScreen from './LoginScreen'; // ไฟล์ที่คุณมีอยู่แล้ว (หรือสร้างใหม่ด้านล่าง)
 import BookScreen from './BookScreen';
+import Dashboard from './components/Dashboard';
 
-
+const { Header, Content } = Layout;
 axios.defaults.baseURL = "http://localhost:3000"
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const handleLoginSuccess = () => {setIsAuthenticated(true)}
+  // • เพิ่ม Feature Remember Me โดยเช็ค Token จาก localStorage เมื่อโหลดหน้า
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('user_token'));
+  const [books, setBooks] = useState([]);
+
+  const handleLoginSuccess = (token, remember) => {
+    if (remember) {
+      localStorage.setItem('user_token', token);
+    }
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user_token');
+    setIsAuthenticated(false);
+  };
+
+  // ดึงข้อมูลหนังสือไว้สำหรับทำ Dashboard
+  useEffect(() => {
+    if (isAuthenticated) {
+      axios.get("/api/book").then(res => setBooks(res.data));
+    }
+  }, [isAuthenticated]);
 
   return (
-    <>
-      {isAuthenticated ? <BookScreen/> : <LoginScreen onLoginSuccess={handleLoginSuccess}/>}
-    </>
-  )
+    <Router>
+      {!isAuthenticated ? (
+        <LoginScreen onLoginSuccess={handleLoginSuccess} />
+      ) : (
+        <Layout style={{ minHeight: '100vh' }}>
+          <Header style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+              <Menu.Item key="1"><Link to="/">Book Management</Link></Menu.Item>
+              <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+            </Menu>
+            <Button type="primary" danger onClick={handleLogout} style={{ marginTop: '16px' }}>
+              Logout
+            </Button>
+          </Header>
+          <Content>
+            <Routes>
+              <Route path="/" element={<BookScreen />} />
+              <Route path="/dashboard" element={<Dashboard books={books} />} />
+              <Route path="*" element={<Navigate to="/" />} />
+            </Routes>
+          </Content>
+        </Layout>
+      )}
+    </Router>
+  );
 }
 
-export default App
+export default App;
