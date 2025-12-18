@@ -36,6 +36,18 @@ function App() {
       axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
     }
   }, []);
+  useEffect(() => {
+    if (isAuthenticated) {
+      axios.get("/api/book")
+        .then(res => {
+          setBooks(res.data); // นำข้อมูลหนังสือที่ดึงได้ใส่ใน State
+        })
+        .catch(err => {
+          console.error("Dashboard fetch error:", err);
+          if (err.response?.status === 401) handleLogout(); // ถ้า Token หมดอายุให้ Logout
+        });
+    }
+  }, [isAuthenticated]);
 
   return (
     <Router>
