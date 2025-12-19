@@ -1,6 +1,6 @@
 import './App.css'
 import { useState, useEffect } from 'react';
-import { Divider, Spin } from 'antd';
+import { Divider, Spin, Input } from 'antd';
 import axios from 'axios'
 import BookList from './components/BookList'
 import AddBook from './components/AddBook';
@@ -14,14 +14,16 @@ function BookScreen() {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [editBook, setEditBook] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const filteredBooks = bookData.filter(book => 
+    book.title.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   const fetchCategories = async () => {
     try {
       const response = await axios.get(URL_CATEGORY);
-      setCategories(response.data.map(cat => ({
-        label: cat.name,
-        value: cat.id
-      })));
+      // adjust mapping if your API returns a different shape
+      setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -97,7 +99,12 @@ function BookScreen() {
 
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "center", marginBottom: "2em" }}>
+    <Input.Search 
+      placeholder="ค้นหาชื่อหนังสือ..." 
+      onChange={e => setSearchText(e.target.value)} 
+      style={{ width: 300, marginBottom: 20 }}
+    />
+    <div style={{ display: "flex", justifyContent: "center", marginBottom: "2em" }}>
         <AddBook categories={categories} onBookAdded={handleAddBook}/>
       </div>
       <Divider>
@@ -117,6 +124,10 @@ function BookScreen() {
         open={editBook !== null} 
         onCancel={() => setEditBook(null)} 
         onSave={handleEditBook} />
+    
+    
+      
+        
     </>
   )
 }

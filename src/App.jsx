@@ -6,6 +6,7 @@ import { Layout, Menu, Button } from 'antd';
 import LoginScreen from './LoginScreen'; 
 import BookScreen from './BookScreen';
 import Dashboard from './components/Dashboard';
+import CategoryScreen from './CategoryScreen';
 
 const { Header, Content } = Layout;
 axios.defaults.baseURL = "http://localhost:3000"
@@ -28,6 +29,17 @@ function App() {
     delete axios.defaults.headers.common['Authorization'];
     setIsAuthenticated(false);
   };
+  <><Routes>
+    <Route path="/" element={<BookScreen />} />
+    <Route path="/dashboard" element={<Dashboard books={books} />} />
+    {/* 2. เพิ่ม Route ใหม่ */}
+    <Route path="/category" element={<CategoryScreen />} />
+  </Routes><Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
+      <Menu.Item key="1"><Link to="/">Books</Link></Menu.Item>
+      <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+      {/* 3. เพิ่มปุ่มเมนู */}
+      <Menu.Item key="3"><Link to="/category">Categories</Link></Menu.Item>
+    </Menu></>
 
   
   useEffect(() => {
@@ -59,15 +71,17 @@ function App() {
             <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
               <Menu.Item key="1"><Link to="/">Book Management</Link></Menu.Item>
               <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+              <Menu.Item key="3"><Link to="/category">Categories</Link></Menu.Item>
             </Menu>
             <Button type="primary" danger onClick={handleLogout} style={{ marginTop: '16px' }}>
               Logout
             </Button>
           </Header>
-          <Content>
+          <Content style={{ background: '#f0f2f5' }}>
             <Routes>
               <Route path="/" element={<BookScreen />} />
               <Route path="/dashboard" element={<Dashboard books={books} />} />
+              <Route path="/category" element={<CategoryScreen />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </Content>
