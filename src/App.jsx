@@ -61,27 +61,46 @@ function App() {
     }
   }, [isAuthenticated]);
 
-  return (
+ return (
     <Router>
       {!isAuthenticated ? (
         <LoginScreen onLoginSuccess={handleLoginSuccess} />
       ) : (
         <Layout style={{ minHeight: '100vh' }}>
-          <Header style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-              <Menu.Item key="1"><Link to="/">Book Management</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>
-              <Menu.Item key="3"><Link to="/category">Categories</Link></Menu.Item>
-            </Menu>
-            <Button type="primary" danger onClick={handleLogout} style={{ marginTop: '16px' }}>
-              Logout
-            </Button>
-          </Header>
-          <Content style={{ background: '#f0f2f5' }}>
+          <Header style={{ 
+  display: 'flex', 
+  alignItems: 'center', 
+  justifyContent: 'space-between',
+  background: '#001529',
+  padding: '0 24px',
+  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+  zIndex: 1
+}}>
+  <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+    <div className="logo-text" style={{ color: '#fff', fontSize: '18px', fontWeight: 'bold', marginRight: '40px' }}>
+      📚 BOOKSTORE
+    </div>
+    <Menu 
+      theme="dark" 
+      mode="horizontal" 
+      defaultSelectedKeys={['1']}
+      style={{ flex: 1, borderBottom: 'none' }}
+    >
+      <Menu.Item key="1"><Link to="/">Books</Link></Menu.Item>
+      <Menu.Item key="2"><Link to="/dashboard">Dashboard</Link></Menu.Item>
+      <Menu.Item key="3"><Link to="/category">Categories</Link></Menu.Item>
+    </Menu>
+  </div>
+  <Button type="primary" danger onClick={handleLogout} style={{ borderRadius: '6px' }}>
+    Logout
+  </Button>
+</Header>
+          <Content>
             <Routes>
               <Route path="/" element={<BookScreen />} />
               <Route path="/dashboard" element={<Dashboard books={books} />} />
-              <Route path="/category" element={<CategoryScreen />} />
+              {/* ตรวจสอบว่ามี Route สำหรับหน้า Category แล้ว */}
+              <Route path="/category" element={<CategoryScreen />} /> 
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </Content>

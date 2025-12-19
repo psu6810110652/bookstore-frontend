@@ -5,6 +5,7 @@
   text-align: center;
 }
 
+
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -43,4 +44,35 @@
 
 .red-row {
   background-color: #ffe6e6;
+}
+
+body {
+  background-color: #f5f7fa; /* สีพื้นหลังเว็บที่ดูสบายตา */
+}
+
+.ant-layout-content {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.ant-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border: none;
+}
+
+.ant-table {
+  background: white;
+  border-radius: 8px;
+}
+
+
+.red-row {
+  background-color: #fff1f0 !important;
+}
+
+.red-row:hover > td {
+  background-color: #ffccc7 !important;
 }
